@@ -62,5 +62,31 @@ public class FilmesDAO {
 
         return lista;
     }
+    
+    public boolean removerFilme(int id) {
+        boolean sucesso = false;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+            
+            String sql = "DELETE FROM filmes WHERE id = ?";
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            
+            int linhasAfetadas = pstmt.executeUpdate();
+            sucesso = (linhasAfetadas > 0);
+
+            pstmt.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sucesso;
+    }
+
+
+
 
 }

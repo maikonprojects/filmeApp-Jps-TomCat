@@ -30,13 +30,37 @@ public class FilmeServlet extends HttpServlet {
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
     
+//    @Override
+//    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+//            throws ServletException, IOException {
+//        String nomeFilme = req.getParameter("nomeFilme");
+//        FilmesDAO dao = new FilmesDAO();
+//        List<Filme> filmes = dao.adicionarFilme(nomeFilme); // insere e busca
+//        req.setAttribute("filmes", filmes);
+//        req.getRequestDispatcher("index.jsp").forward(req, resp);
+//    }
+//    
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String nomeFilme = req.getParameter("nomeFilme");
+
+        String action = req.getParameter("action");
+
         FilmesDAO dao = new FilmesDAO();
-        List<Filme> filmes = dao.adicionarFilme(nomeFilme); // insere e busca
+        List<Filme> filmes;
+
+        if ("delete".equals(action)) {
+            int idFilme = Integer.parseInt(req.getParameter("idFilme"));
+            dao.removerFilme(idFilme);
+        } else {
+            String nomeFilme = req.getParameter("nomeFilme");
+            dao.adicionarFilme(nomeFilme);
+        }
+
+        filmes = dao.listarFilmes(); // Atualiza lista após qualquer operação
         req.setAttribute("filmes", filmes);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
+
 }
