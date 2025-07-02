@@ -62,5 +62,27 @@ public class FilmeServlet extends HttpServlet {
         req.setAttribute("filmes", filmes);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
+    
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
+        String idParam = req.getParameter("idFilme");
+
+        if (idParam == null || idParam.isEmpty()) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do filme não informado.");
+            return;
+        }
+
+        try {
+            int idFilme = Integer.parseInt(idParam);
+            FilmesDAO dao = new FilmesDAO();
+            dao.removerFilme(idFilme);
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT); // 204 - sucesso, sem resposta
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido.");
+        }
+    }
+
+    
 }
